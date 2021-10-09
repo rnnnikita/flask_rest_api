@@ -8,12 +8,12 @@ api = Api(
     app,
     version='1.0',
     title='Temperature observation',
-    description='A simple TodoMVC API', prefix='/api/v1'
+    description='Weather observation API', prefix='/api/v1'
 )
 
 ns = api.namespace('temperature_observations', description='Temperature observations')
 
-todo = api.model('TemperatureObservation', {
+temperature_observation = api.model('TemperatureObservation', {
     'id': fields.Integer(readonly=True, description='The task unique identifier'),
     'temperature': fields.Integer(required=True, description='The task details')
 })
@@ -54,15 +54,15 @@ DAO.create({'temperature': 32})
 
 
 @ns.route('/')
-class TodoList(Resource):
-    @ns.doc('list_todos')
-    @ns.marshal_list_with(todo)
+class ObservationList(Resource):
+    @ns.doc('list_temperature_observations')
+    @ns.marshal_list_with(temperature_observation)
     def get(self):
         return DAO.observations
 
     @ns.doc('add_temperature_observation')
-    @ns.expect(todo)
-    @ns.marshal_with(todo, code=201)
+    @ns.expect(temperature_observation)
+    @ns.marshal_with(temperature_observation, code=201)
     def post(self):
         return DAO.create(api.payload), 201
 
