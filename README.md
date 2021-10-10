@@ -4,3 +4,8 @@
 ```
 $ ./bootstrap.sh
 ```
+
+## run in docker
+```
+$ docker-compose up -d
+```
