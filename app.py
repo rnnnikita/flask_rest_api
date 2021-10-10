@@ -1,8 +1,24 @@
 from flask import Flask
 from flask_restx import Api, Resource, fields
 from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:test@localhost:5432/events"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+class TemperatureObservation(db.Model):
+    __tablename__ = 'events'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    temperature_observation = db.Column(db.Integer)
+
 app.wsgi_app = ProxyFix(app.wsgi_app)
 api = Api(
     app,
